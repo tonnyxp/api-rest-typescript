@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "es6",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "dist", // Compiled Output Directory
+    /* "paths": {
+      "@controllers/*": ["src/controllers/*"],
+      "@models/*": ["src/models/*"],
+      "@config/*": ["src/config/*"],
+      "@utils/*": ["src/utils/*"]
+    }, */
+  },
+  "lib": ["es2015"],
+  "include": [
+    "src/**/*.js", // Every js file inside src folder
+    "src/**/*.ts", // Every ts file inside src folder
+    "server.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist" // Exclude compiled output by Typescript compiler
+  ]
+}
