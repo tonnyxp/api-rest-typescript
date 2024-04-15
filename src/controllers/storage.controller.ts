@@ -1,6 +1,5 @@
 import fs from "node:fs";
 import { Request, Response } from "express";
-import Storage from "../models/storage.model";
 import { StorageService } from "../services/storage.service";
 import { handleHttpError } from "../utils/error.handle";
 
@@ -10,10 +9,10 @@ const PATH_STORAGE = `${process.cwd()}/storage`;
 export class StorageController {
   static async upload({ file }: Request, res: Response) {
     try {
-      const fileData: Storage = new Storage({
-        filename: `${file?.filename}`,
-        url: `${PUBLIC_URL}/${file?.filename}`,
-      });
+      const fileData = {
+        filename: `${file.filename}`,
+        url: `${PUBLIC_URL}/${file.filename}`,
+      };
 
       const data = await StorageService.registerUpload(fileData);
       res.status(201).send({ data });

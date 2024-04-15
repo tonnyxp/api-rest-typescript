@@ -1,30 +1,40 @@
-import { Model, DataTypes } from "sequelize";
+import { Model, Optional, DataTypes } from "sequelize";
 import { sequelize } from "../config/mysql";
 
-class Storage extends Model {
-  public uuid!: string;
-  public filename!: string;
-  public url!: string;
+interface StorageAttributes {
+  uuid: string;
+  filename: string;
+  url: string;
 }
 
-Storage.init(
-  {
+interface StorageCreationAttributes 
+  extends Optional<StorageAttributes, "uuid"> {}
+
+interface StorageInstance
+  extends Model<StorageAttributes, StorageCreationAttributes>,
+    StorageAttributes {
+      createdAt?: Date;
+      updatedAt?: Date;
+    }
+
+const Storage = sequelize.define<StorageInstance>(
+  "Storage", {
     uuid: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
+      type: DataTypes.UUID,
+      unique: true,
+      defaultValue: DataTypes.UUIDV4,
     },
     filename: {
-      type: DataTypes.STRING,
       allowNull: false,
+      type: DataTypes.STRING,
     },
     url: {
-      type: DataTypes.STRING,
       allowNull: false,
+      type: DataTypes.STRING,
     },
   },
   {
-    sequelize,
     tableName: "storage",
     timestamps: true,
   }

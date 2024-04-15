@@ -1,7 +1,7 @@
 import Storage from "../models/storage.model";
 
 export class StorageService {
-  static async registerUpload({ filename, url }: Storage) {
+  static async registerUpload({ filename, url }) {
     const upload = await Storage.create({ filename, url });
     return upload;
   }
