@@ -9,7 +9,7 @@ import {
 } from "../constants/auth";
 
 export class AuthService {
-  static async registerUser({ name, email, password }: User) {
+  static async registerUser({ name, email, password }) {
     const transaction = await sequelize.transaction();
 
     try {
@@ -30,8 +30,8 @@ export class AuthService {
     }
   }
 
-  static async loginUser({ email, password }: User) {
-    const user = await User.findOne({ where: { email, active: true } });
+  static async loginUser({ email, password }) {
+    const user = await User.findOne({ where: { email, status: 1 } });
     if (!user) return USER_NOT_EXISTS;
 
     const checkPassword = await verified(password, user.password);

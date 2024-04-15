@@ -1,53 +1,67 @@
-import { Model, DataTypes } from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from "../config/mysql";
 
-class User extends Model {
-  public uuid!: string;
-  public name!: string;
-  public email!: string;
-  public password!: string;
-  public role!: "admin" | "user";
-  public active!: boolean;
-
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+interface UserAttributes {
+  uuid: string;
+  name: string;
+  email: string;
+  password: string;
+  verified: boolean;
+  role: number;
+  status: number;
 }
 
-User.init(
-  {
+interface UserCreationAttributes 
+  extends Optional<UserAttributes, "uuid"> {}
+
+interface UserInstance
+  extends Model<UserAttributes, UserCreationAttributes>,
+    UserAttributes {
+      createdAt?: Date;
+      updatedAt?: Date;
+    }
+
+const User = sequelize.define<UserInstance>(
+  "User", {
     uuid: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
+      type: DataTypes.UUID,
+      unique: true,
+      defaultValue: DataTypes.UUIDV4,
     },
     name: {
-      type: DataTypes.STRING,
       allowNull: false,
+      type: DataTypes.STRING,
     },
     email: {
+      allowNull: false,
       type: DataTypes.STRING,
       unique: true,
-      allowNull: false,
     },
     password: {
-      type: DataTypes.STRING,
       allowNull: false,
+      type: DataTypes.STRING,
+    },
+    verified: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
     role: {
-      type: DataTypes.ENUM("admin", "user"),
-      allowNull: false,
-      defaultValue: "user",
+      type: DataTypes.INTEGER,
     },
-    active: {
-      type: DataTypes.BOOLEAN,
+    status: {
       allowNull: false,
-      defaultValue: true,
+      type: DataTypes.INTEGER,
+      defaultValue: 1,
     },
   },
   {
-    sequelize,
     tableName: "users",
     timestamps: true,
+    defaultScope: {
+      attributes: { exclude: ["password"] },
+    },
   }
 );
 
