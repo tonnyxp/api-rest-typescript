@@ -1,6 +1,7 @@
 import { Model, Optional, DataTypes } from "sequelize";
 import { sequelize } from "../config/mysql";
-import Role from "./roles.model";
+import RoleModel from "./roles.model";
+import { Role } from "../interfaces/role.interface";
 
 interface UserAttributes {
   uuid: string;
@@ -18,6 +19,7 @@ interface UserCreationAttributes
 interface UserInstance
   extends Model<UserAttributes, UserCreationAttributes>,
     UserAttributes {
+  role?: Role;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -50,9 +52,10 @@ const User = sequelize.define<UserInstance>(
       defaultValue: false,
     },
     roleId: {
+      allowNull: false,
       type: DataTypes.INTEGER,
       references: {
-        model: Role,
+        model: RoleModel,
         key: "roleId",
       },
     },
@@ -71,6 +74,10 @@ const User = sequelize.define<UserInstance>(
   }
 );
 
-User.hasOne(Role, { as: "role", foreignKey: "roleId" });
+User.hasOne(RoleModel, {
+  as: "role",
+  sourceKey: "roleId",
+  foreignKey: "roleId",
+});
 
 export default User;
