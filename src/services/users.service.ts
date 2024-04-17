@@ -1,9 +1,10 @@
-import User from '../models/users.model';
+import { User } from "../interfaces/user.interface";
+import UserModel from "../models/users.model";
 
 export class UserService {
   static async getUsers() {
     try {
-      const users = await User.findAll();
+      const users = await UserModel.findAll();
       return users;
     } catch (error) {
       console.error(error);
@@ -13,7 +14,7 @@ export class UserService {
 
   static async getUser(id: string) {
     try {
-      const user = await User.findByPk(id);
+      const user = await UserModel.findByPk(id);
       return user;
     } catch (error) {
       console.error(error);
@@ -21,12 +22,12 @@ export class UserService {
     }
   }
 
-  static async updateUser(id: string, body: any) {
+  static async updateUser(id: string, payload: User) {
     try {
-      const user = await User.findByPk(id);
+      const user = await UserModel.findByPk(id);
       if (!user) return null;
 
-      await user.update(body);
+      await user.update(payload);
       return user;
     } catch (error) {
       console.error(error);
@@ -36,7 +37,7 @@ export class UserService {
 
   static async deleteUser(id: string) {
     try {
-      const user = await User.findByPk(id);
+      const user = await UserModel.findByPk(id);
       if (!user) return false;
 
       await user.destroy();

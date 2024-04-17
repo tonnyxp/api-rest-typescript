@@ -1,5 +1,7 @@
 import { sequelize } from "../config/mysql";
-import User from "../models/users.model";
+import { Auth } from "../interfaces/auth.interface";
+import { User } from "../interfaces/user.interface";
+import UserModel from "../models/users.model";
 import { encrypt, verified } from "../utils/bcrypt.handle";
 import { decodeToken, generateToken } from "../utils/jwt.handle";
 import {
@@ -9,15 +11,15 @@ import {
 } from "../constants/auth";
 
 export class AuthService {
-  static async registerUser({ name, email, password }) {
+  static async registerUser({ name, email, password }: User) {
     const transaction = await sequelize.transaction();
 
     try {
-      const checkIt = await User.findOne({ where: { email } });
+      const checkIt = await UserModel.findOne({ where: { email } });
       if (checkIt) return USER_EXISTS;
 
       const passwordHash = await encrypt(password);
-      const user = await User.create(
+      const user = await UserModel.create(
         { name, email, password: passwordHash },
         { transaction }
       );
@@ -30,8 +32,8 @@ export class AuthService {
     }
   }
 
-  static async loginUser({ email, password }) {
-    const user = await User.findOne({ where: { email, status: 1 } });
+  static async loginUser({ email, password }: Auth) {
+    const user = await UserModel.findOne({ where: { email, status: 1 } });
     if (!user) return USER_NOT_EXISTS;
 
     const checkPassword = await verified(password, user.password);
@@ -44,7 +46,7 @@ export class AuthService {
   static async profileUser(token: string) {
     const { id: userId } = decodeToken(token) as { id: string };
 
-    const user = await User.findOne({ where: { uuid: userId } });
+    const user = await UserModel.findOne({ where: { uuid: userId } });
     if (!user) return USER_NOT_EXISTS;
 
     const data = {
@@ -59,7 +61,7 @@ export class AuthService {
   static async refreshToken(token: string) {
     const { id: userId } = decodeToken(token) as { id: string };
 
-    const user = await User.findOne({ where: { uuid: userId } });
+    const user = await UserModel.findOne({ where: { uuid: userId } });
     if (!user) return USER_NOT_EXISTS;
 
     const newToken = generateToken(user);
