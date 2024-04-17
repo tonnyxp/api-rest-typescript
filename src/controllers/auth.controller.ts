@@ -29,7 +29,7 @@ export class AuthController {
       if (data === USER_NOT_EXISTS) {
         return handleErrorResponse(res, "Usuario no encontrado", 404);
       } else if (data === PASSWORD_INCORRECT) {
-        return handleErrorResponse(res, "Contraseña incorrecta", 401);
+        return handleErrorResponse(res, "Contraseña incorrecta", 403);
       }
 
       res.status(200).send({ data });
