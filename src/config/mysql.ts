@@ -19,9 +19,9 @@ const connectDB = async () => {
     await sequelize.authenticate();
     // TODO: Remove alter: true in production
     await sequelize.sync();
-    console.log("> Successfully connected to database");
+    console.log("[database]: Successfully connected to database");
   } catch (e) {
-    console.log("> Error connecting to database: ", e);
+    console.log("[database]: Error connecting to database: ", e);
   }
 };
 
