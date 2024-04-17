@@ -1,4 +1,5 @@
 import { decode, sign, verify } from "jsonwebtoken";
+import { User } from "../interfaces/user.interface";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN as string;
@@ -8,11 +9,11 @@ const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN as string;
  * @param payload
  * @returns
  */
-const generateToken = (payload: any) => {
+const generateToken = (payload: User) => {
   const token = sign(
     {
       id: payload.uuid,
-      role: payload.role,
+      role: payload.role?.name,
     },
     JWT_SECRET,
     {
