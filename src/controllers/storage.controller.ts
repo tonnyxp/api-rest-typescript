@@ -10,8 +10,8 @@ export class StorageController {
   static async upload({ file }: Request, res: Response) {
     try {
       const fileData = {
-        filename: `${file.filename}`,
-        url: `${PUBLIC_URL}/${file.filename}`,
+        filename: `${file!.filename}`,
+        url: `${PUBLIC_URL}/${file!.filename}`,
       };
 
       const data = await StorageService.registerUpload(fileData);
