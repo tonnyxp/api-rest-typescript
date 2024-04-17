@@ -1,4 +1,3 @@
-import { sequelize } from "../config/mysql";
 import { Auth } from "../interfaces/auth.interface";
 import { User } from "../interfaces/user.interface";
 import UserModel from "../models/users.model";
@@ -9,31 +8,31 @@ import {
   USER_EXISTS,
   USER_NOT_EXISTS,
 } from "../constants/auth";
+import { ROLE_TYPES } from "../constants/roles";
 
 export class AuthService {
   static async registerUser({ name, email, password }: User) {
-    const transaction = await sequelize.transaction();
+    const checkIt = await UserModel.findOne({ where: { email } });
+    if (checkIt) return USER_EXISTS;
 
-    try {
-      const checkIt = await UserModel.findOne({ where: { email } });
-      if (checkIt) return USER_EXISTS;
+    const passwordHash = await encrypt(password);
+    const user = await UserModel.create({
+      name,
+      email,
+      password: passwordHash,
+      roleId: ROLE_TYPES.USER,
+    });
 
-      const passwordHash = await encrypt(password);
-      const user = await UserModel.create(
-        { name, email, password: passwordHash },
-        { transaction }
-      );
-
-      await transaction.commit();
-      return user;
-    } catch (error) {
-      await transaction.rollback();
-      throw error;
-    }
+    return user;
   }
 
   static async loginUser({ email, password }: Auth) {
-    const user = await UserModel.findOne({ where: { email, status: 1 } });
+    const user = await UserModel.findOne({
+      where: { email, status: 1 },
+      attributes: { include: ["password"] },
+      include: { association: "role" },
+    });
+
     if (!user) return USER_NOT_EXISTS;
 
     const checkPassword = await verified(password, user.password);
@@ -46,13 +45,18 @@ export class AuthService {
   static async profileUser(token: string) {
     const { id: userId } = decodeToken(token) as { id: string };
 
-    const user = await UserModel.findOne({ where: { uuid: userId } });
+    const user = await UserModel.findOne({
+      where: { uuid: userId, status: 1 },
+      include: { association: "role" },
+    });
+
     if (!user) return USER_NOT_EXISTS;
 
     const data = {
       uuid: user.uuid,
       name: user.name,
       email: user.email,
+      role: user.role?.name,
     };
 
     return data;
@@ -61,7 +65,11 @@ export class AuthService {
   static async refreshToken(token: string) {
     const { id: userId } = decodeToken(token) as { id: string };
 
-    const user = await UserModel.findOne({ where: { uuid: userId } });
+    const user = await UserModel.findOne({
+      where: { uuid: userId, status: 1 },
+      include: { association: "role" },
+    });
+
     if (!user) return USER_NOT_EXISTS;
 
     const newToken = generateToken(user);
