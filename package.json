@@ -9,9 +9,10 @@
     "jsonwebtoken": "9.0.2",
     "morgan": "1.10.0",
     "multer": "1.4.5-lts.1",
-    "mysql2": "3.9.4",
+    "mysql2": "3.9.5",
     "nodemon": "3.1.0",
-    "sequelize": "6.37.2"
+    "sequelize": "6.37.3",
+    "ts-node": "10.9.2"
   },
   "description": "API REST con TypeScript, Express, Sequelize y MySQL",
   "devDependencies": {
