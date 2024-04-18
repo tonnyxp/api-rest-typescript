@@ -6,7 +6,7 @@ const validateUser = [
   check("name", "El nombre es requerido").notEmpty(),
   check("email", "El email es requerido").isEmail(),
   check("verified", "El estado de verificación es requerido").notEmpty(),
-  check("role", "El rol es requerido").notEmpty(),
+  check("roleId", "El rol es requerido").notEmpty(),
   check("status", "El estado es requerido").notEmpty(),
   (req: Request, res: Response, next: NextFunction) => {
     validateResult(req, res, next);
