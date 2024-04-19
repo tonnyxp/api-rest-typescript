@@ -13,6 +13,7 @@
     "dev": "tsnd --respawn src/main.ts",
     "start": "node dist/main.js",
     "build": "npm run validate-typescript && npm run build:clean && npm run generate-dist",
+    "seed": "node dist/database/seeders",
     "build:clean": "rimraf dist; exit 0",
     "validate-typescript": "tsc -p tsconfig.prod.json --noEmit",
     "generate-dist": "tsc --build tsconfig.prod.json && cp .env dist"
