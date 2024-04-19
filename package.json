@@ -1,5 +1,22 @@
 {
-  "author": "Antonio Alvarado",
+  "name": "api-rest-typescript",
+  "version": "1.0.0",
+  "description": "API REST con TypeScript, Express, Sequelize y MySQL",
+  "author": "jantoniolvrd@gmail.com",
+  "license": "MIT",
+  "keywords": [
+    "typescript",
+    "express"
+  ],
+  "main": "dist/main.js",
+  "scripts": {
+    "dev": "tsnd --respawn src/main.ts",
+    "start": "node dist/main.js",
+    "build": "npm run validate-typescript && npm run build:clean && npm run generate-dist",
+    "build:clean": "rimraf dist; exit 0",
+    "validate-typescript": "tsc -p tsconfig.prod.json --noEmit",
+    "generate-dist": "tsc --build tsconfig.prod.json && cp .env dist"
+  },
   "dependencies": {
     "bcryptjs": "2.4.3",
     "cors": "2.8.5",
@@ -10,11 +27,8 @@
     "morgan": "1.10.0",
     "multer": "1.4.5-lts.1",
     "mysql2": "3.9.5",
-    "nodemon": "3.1.0",
-    "sequelize": "6.37.3",
-    "ts-node": "10.9.2"
+    "sequelize": "6.37.3"
   },
-  "description": "API REST con TypeScript, Express, Sequelize y MySQL",
   "devDependencies": {
     "@types/bcryptjs": "2.4.6",
     "@types/cors": "2.8.17",
@@ -24,17 +38,11 @@
     "@types/multer": "1.4.11",
     "@types/node": "20.12.7",
     "@types/sequelize": "4.28.20",
+    "rimraf": "5.0.5",
+    "ts-node-dev": "2.0.0",
     "typescript": "5.4.5"
   },
-  "keywords": [],
-  "license": "ISC",
-  "main": "server.ts",
-  "name": "api-rest-typescript",
-  "scripts": {
-    "dev": "nodemon server",
-    "build": "tsc",
-    "start": "tsc && node dist/server.js",
-    "seed": "ts-node ./src/database/seeders"
-  },
-  "version": "1.0.0"
+  "files": [
+    "dist"
+  ]
 }
