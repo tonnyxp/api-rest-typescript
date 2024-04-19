@@ -1,20 +1,18 @@
 {
   "compilerOptions": {
-    "target": "es2016",
+    "baseUrl": ".",
     "module": "commonjs",
+    "target": "es2022",
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "outDir": "dist",
+    "sourceMap": true,
+    "inlineSources": true,
     "skipLibCheck": true,
-    "outDir": "./dist"
+    "resolveJsonModule": true,
+    "paths": {
+      "@src/*": ["src/*"]
+    },
   },
-  "include": [
-    "src/**/*.js", // Every js file inside src folder
-    "src/**/*.ts", // Every ts file inside src folder
-    "server.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist" // Exclude compiled output by Typescript compiler
-  ]
+  "exclude": ["node_modules", "dist"]
 }
